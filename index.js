@@ -5,6 +5,7 @@ import { MongoClient } from "mongodb";
 import cors from "cors";
 import { productrouter } from "./routes/productRoutes.js";
 import { orderrouter } from "./routes/orderRoutes.js";
+import { paymentrouter } from "./routes/paymentRoutes.js";
 
 const app = express();
 dotenv.config();
@@ -37,3 +38,4 @@ export const client = await createConnection();
 app.use("/auth", authRouter);
 app.use("/product", productrouter);
 app.use("/order", orderrouter);
+app.use("/payment", paymentrouter);
