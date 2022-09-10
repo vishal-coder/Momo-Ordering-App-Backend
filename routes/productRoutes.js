@@ -14,7 +14,7 @@ router.get("/", (req, res) => {
 router.post("/add", addProduct);
 router.post("/edit", editProduct);
 
-router.get("/getAll", getProductList);
+router.get("/getAllProducts", getProductList);
 router.post("/delete", deleteProduct);
 
 export const productrouter = router;
