@@ -52,7 +52,7 @@ export const signup = async (req, res) => {
     confirmationToken
   );
   console.log("isInserted", isInserted);
-  sendAccountVerificationMail(username, confirmationToken, firstName);
+  sendAccountVerificationMail(username, confirmationToken, firstname);
 
   res.status(200).send({
     message: "User was registered successfully! Please Verify Your Email!",
@@ -102,6 +102,7 @@ export const login = async (req, res) => {
       email: dBUserByEmail.username,
       userType: dBUserByEmail.role,
       address: dBUserByEmail.address,
+      token: token,
     },
   });
 };
@@ -187,4 +188,12 @@ export const verifyEmail = async (req, res) => {
     message: "email verified successfully !!!",
     success: true,
   });
+};
+
+export const logoutUser = async (req, res) => {
+  console.log("Inside handleLogoutUser");
+  const { token } = req.body;
+  // TODO: list token as expired or blacklisted
+
+  return res.send({ success: true, message: "user logged out successfully" });
 };

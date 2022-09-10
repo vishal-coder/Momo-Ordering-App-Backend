@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { authRouter } from "./routes/auth.js";
 import { MongoClient } from "mongodb";
 import cors from "cors";
+import { productrouter } from "./routes/productRoutes.js";
 
 const app = express();
 dotenv.config();
@@ -33,3 +34,4 @@ app.get("/", (req, res) => {
 
 export const client = await createConnection();
 app.use("/auth", authRouter);
+app.use("/product", productrouter);
