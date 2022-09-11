@@ -22,3 +22,10 @@ export function updateOrderStatus(_id, status) {
     .collection("orders")
     .updateOne({ _id: ObjectId(_id) }, { $set: { status: status } });
 }
+export function getCustomerOrderByUsername(user) {
+  return client
+    .db("momoking")
+    .collection("orders")
+    .find({ user: user })
+    .toArray();
+}

@@ -1,4 +1,5 @@
 import {
+  getCustomerOrderByUsername,
   getOrdersFromDB,
   insertOrder,
   updateOrderStatus,
@@ -6,13 +7,14 @@ import {
 
 export const saveOrder = async (req, res) => {
   console.log("Inside saveOrder");
-  const { cart, user, total } = req.body;
+  const { cart, user, total, payemntId } = req.body;
 
   const added = await insertOrder({
     user: user,
     cart: cart,
     total: total,
     status: 0,
+    payemntId: payemntId,
     createdOn: new Date(),
   });
   if (!added) {
@@ -63,5 +65,24 @@ export const updateOrder = async (req, res) => {
   res.send({
     success: true,
     message: "fetched orders successfully",
+  });
+};
+export const getCustomerOrder = async (req, res) => {
+  console.log("Inside getCustomerOrder");
+  const { user } = req.body;
+
+  const customerOrders = await getCustomerOrderByUsername(user);
+  if (!customerOrders) {
+    res.send({
+      success: false,
+      message: "Failed to get orders",
+    });
+    res.end();
+  }
+
+  res.send({
+    success: true,
+    message: "fetched orders successfully",
+    customerOrders: customerOrders,
   });
 };

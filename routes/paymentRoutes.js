@@ -1,7 +1,7 @@
 import express from "express";
 import {
   createPaymnetOrder,
-  payOrder,
+  savePaymentInfo,
 } from "../controllers/PaymentController.js";
 
 const router = express.Router();
@@ -10,6 +10,6 @@ router.get("/", (req, res) => {
 });
 
 router.post("/create-payment-order", createPaymnetOrder);
-router.post("/pay-order", payOrder);
+router.post("/savePaymentInfo", savePaymentInfo);
 
 export const paymentrouter = router;

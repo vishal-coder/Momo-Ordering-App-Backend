@@ -12,7 +12,7 @@ export const createPaymnetOrder = async (req, res) => {
   });
 
   var options = {
-    amount: 100, // amount in the smallest currency unit
+    amount: amount * 100, // amount in the smallest currency unit
     currency: "INR",
     receipt: "order_rcptid_11",
   };
@@ -25,31 +25,36 @@ export const createPaymnetOrder = async (req, res) => {
       res.send({
         success: true,
         message: "payment initiated successfully",
-        orderDate: order,
+        orderData: order,
       });
     }
     console.log(order);
   });
 };
 
-export const payOrder = async (req, res) => {
-  console.log("Inside payOrder");
-  const { amount, razorpayPaymentId, razorPayOrderId, razorpaySignature } =
-    req.body;
+export const savePaymentInfo = async (req, res) => {
+  console.log("Inside savePaymentInfo");
+  const {
+    user,
+    amount,
+    orderCreationId,
+    razorpayPaymentId,
+    razorPayOrderId,
+    razorpaySignature,
+  } = req.body;
 
   const query = {
-    isPaid: true,
     amount: amount,
-    razorPay: {
-      orderId: razorPayOrderId,
-      paymentId: razorpayPaymentId,
-      signature: razorpaySignature,
-    },
+    orderCreationId: orderCreationId,
+    razorPayOrderId: razorPayOrderId,
+    paymentId: razorpayPaymentId,
+    signature: razorpaySignature,
+    user: user,
+    createOn: new Date(),
   };
 
-  const payment = savePaymentDetails(query);
+  const payment = await savePaymentDetails(query);
 
-  console.log("payment", payment);
   if (!payment) {
     return res
       .status(500)
