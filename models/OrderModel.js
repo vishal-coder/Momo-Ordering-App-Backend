@@ -11,7 +11,8 @@ export function getOrdersFromDB() {
       .db("momoking")
       .collection("orders")
       // .aggregate([{ $unwind: "$cart" }])
-      .find()
+
+      .find({ status: { $ne: 3 } })
       .toArray()
   );
 }
