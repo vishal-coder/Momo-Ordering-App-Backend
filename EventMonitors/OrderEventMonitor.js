@@ -1,4 +1,5 @@
-import { client, io } from "../index.js";
+import { client, io, activeUsers } from "../index.js";
+import { getOrderById } from "../models/OrderModel.js";
 import { closeChangeStream } from "./EventMonitor.js";
 
 export async function monitorOrdersUsingEventEmitter(
@@ -9,9 +10,28 @@ export async function monitorOrdersUsingEventEmitter(
 ) {
   const collection = client.db("momoking").collection("orders");
   const changeStream = collection.watch(pipeline);
-  changeStream.on("change", (next) => {
+  changeStream.on("change", async (next) => {
     console.log("products next change is ", next);
-    io.emit(emmiterName, next);
+    let flag = false;
+    if (emmiterName == "order updated") {
+      const order = await getOrderById(next.documentKey._id);
+      console.log("order in  next change is ", order);
+      console.log("order in  next change is ", activeUsers);
+
+      activeUsers.forEach((user) => {
+        if (user.username === order.user) {
+          console.log("inside if of  active user", user);
+          io.to(user.socketId).emit(emmiterName, next);
+          flag = true;
+        }
+      });
+
+      if (!flag) {
+        io.emit(emmiterName, next);
+      }
+    } else {
+      io.emit(emmiterName, next);
+    }
   });
   // Wait the given amount of time and then close the change stream
   await closeChangeStream(timeInMs, changeStream); //

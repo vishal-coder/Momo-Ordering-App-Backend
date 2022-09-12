@@ -30,3 +30,10 @@ export function getCustomerOrderByUsername(user) {
     .find({ user: user })
     .toArray();
 }
+
+export function getOrderById(_id) {
+  return client
+    .db("momoking")
+    .collection("orders")
+    .findOne({ _id: ObjectId(_id) });
+}

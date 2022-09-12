@@ -18,7 +18,7 @@ dotenv.config();
 const server = http.createServer(app);
 const PORT = process.env.PORT || 5000;
 const MONGO_URL = process.env.MONGO_URL;
-const activeUsers = new Set();
+export const activeUsers = new Set();
 
 app.use(cors(corsOptions));
 app.use(express.json());
@@ -44,15 +44,24 @@ async function createConnection() {
 io.on("connection", function (socket) {
   console.log("Made socket connection");
 
-  socket.on("new user", function (data) {
-    socket.userId = data;
-    activeUsers.add(data);
-    console.log("nwe user lis", activeUsers);
+  socket.on("new user", function (username) {
+    console.log(username);
+    console.log(activeUsers);
+
+    if (!activeUsers.has((user) => user.username === username)) {
+      activeUsers.add({ username: username, socketId: socket.id });
+      console.log("New User Connected", activeUsers);
+    }
   });
 
   socket.on("disconnect", () => {
-    activeUsers.delete(socket.userId);
-    io.emit("user disconnected", socket.userId);
+    console.log("user disconnected");
+    activeUsers.forEach((user) => {
+      if (user.socketId == socket.id) {
+        activeUsers.delete(user);
+      }
+    });
+    console.log("User Disconnected", activeUsers);
   });
 });
 
