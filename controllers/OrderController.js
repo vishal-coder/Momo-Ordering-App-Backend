@@ -84,7 +84,7 @@ export const updateOrder = async (req, res) => {
   }
   res.send({
     success: true,
-    message: "fetched orders successfully",
+    message: " order updated successfully",
   });
 };
 export const getCustomerOrder = async (req, res) => {
