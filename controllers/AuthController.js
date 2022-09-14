@@ -158,8 +158,7 @@ export const resetpassword = async (req, res) => {
   const updateQuery = { $set: { password: hashedPassword } };
   const updatePasswordResult = await updatePassword(query, updateQuery);
 
-  // const deleteTokenResult = await deleteToken(token);
-  const deleteTokenResult = true;
+  const deleteTokenResult = await deleteToken(token);
 
   if (!deleteTokenResult) {
     return res.send({
